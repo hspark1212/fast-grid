@@ -24,6 +24,7 @@ Run with parameters:
 ```bash
 python calculate_grids.py \
 --structure=examples/irmof-1.cif \
+--gird_size=30 \
 --ff_type=UFF \
 --potential=LJ \
 --cutoff=12.8 \
