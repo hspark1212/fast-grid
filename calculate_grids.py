@@ -35,7 +35,7 @@ def calculate_grids(
     The output shape of energy grid is grid_size * grid_size * grid_size.
 
     :param structure: structure (ase Atoms object or cif file path)
-    :param grid_size: grid size, for example, 30 or [30, 30, 30], defaults to 30
+    :param grid_size: grid size, for example, 30 or "(30, 30, 30)", defaults to 30
     :param ff_type: force field type, defaults to "UFF"
     :param potential: potential function, gaussian or lj, defaults to "LJ"
     :param cutoff: cutoff distance, defaults to 12.8
@@ -65,6 +65,9 @@ def calculate_grids(
     # get position for grid
     if isinstance(grid_size, int):
         grid_size = np.array([grid_size] * 3)
+    else:
+        grid_size = eval(grid_size)
+        assert len(grid_size) == 3, "grid_size must be a 3-dim vector"
     indices = np.indices(grid_size).reshape(3, -1).T
     pos_grid = indices.dot(cell_vectors / grid_size)  # (G, 3)
 
