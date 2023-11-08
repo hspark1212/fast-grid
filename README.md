@@ -32,3 +32,4 @@ python calculate_grids.py \
 --visualize=True
 ```
 
+![scheme_rl-01](./images/irmof-1.png)
