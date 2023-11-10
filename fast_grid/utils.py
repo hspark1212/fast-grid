@@ -3,10 +3,10 @@ from numba import jit
 
 
 @jit(nopython=True)
-def mic_distance_matrix_triclinic(pos1, pos2, cell_vectors):
+def mic_distance_matrix(pos1, pos2, cell_vectors):
     """
     Calculate the distance matrix between two sets of positions with minimum image convention
-    for a triclinic periodic cell.
+    for a periodic cell.
 
     :param pos1: An array of shape (N1, 3) containing the positions of the first set of atoms.
     :param pos2: An array of shape (N2, 3) containing the positions of the second set of atoms.

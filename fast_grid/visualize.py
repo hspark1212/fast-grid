@@ -23,7 +23,9 @@ def visualize_grids(
             y=pos_grid[:, 1],
             z=pos_grid[:, 2],
             mode="markers",
-            hovertemplate="Energy: %{marker.color:.2f} <br>Position: (%{x:.2f}, %{y:.2f}, %{z:.2f})",
+            hovertemplate=(
+                "Energy: %{marker.color:.2f} <br>Position: (%{x:.2f}, %{y:.2f}, %{z:.2f})"
+            ),
             marker=dict(
                 size=6,
                 color=calculated_grids,
@@ -31,7 +33,7 @@ def visualize_grids(
                 opacity=0.9,
                 colorbar=dict(
                     thickness=20,
-                    title="Energy (K)",
+                    title="Energy",
                 ),
                 # cmin=emin,
                 # cmax=emax,
@@ -59,7 +61,7 @@ def visualize_grids(
 
     # update layout
     fig.update_layout(
-        title="3D Scatter Plot of Energy Grid Points",
+        title="3D Scatter Plot of Grid Points",
         scene=dict(
             xaxis_title="X-axis",
             yaxis_title="Y-axis",

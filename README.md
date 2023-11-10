@@ -3,34 +3,79 @@
 
 <h1> Fast Grid 🏁 </h1>
 
-
+  <p>
+    <strong>High-speed Voxel Grid Calculations with Numba</strong>
+  </p>
 
 </div>
 
-Arguments:
+## Installation
+
+To install Fast Grid, run the following command in your terminal:
 
 ```bash
-python calculate_grids.py --help
+pip install fast-grid
 ```
 
-Run with the default parameters:
+## Quick Start
+- Help Command
 
 ```bash
-python calculate_grids.py --structure=examples/irmof-1.cif
+fast-grid --help
 ```
 
-Run with parameters:
+- Run an example to generaate enegy grid with the LJ potential
 
 ```bash
-python calculate_grids.py \
---structure=examples/irmof-1.cif \
---gird_size=30 \
---ff_type=UFF \
---potential=LJ \
---cutoff=12.8 \
---gas_epsilon=148.0 \
---gas_sigma=3.73 \
---visualize=True
+fast-grid --structure=examples/irmof-1.cif --visualize=True
 ```
 
-![scheme_rl-01](./images/irmof-1.png)
+## Usage
+
+### 1. LJ potential
+
+Calculate a 30x30x30 energy grid using the LJ potential:
+
+```python
+from fast_grid import calculate_grids
+
+calculate_grids(
+    structure="examples/irmof-1.cif",
+    grid_size=30,
+    ff_type="UFF",
+    potential="LJ",
+    cutoff=12.8,
+    gas_epsilon=148.0,
+    gas_sigma=3.73,
+    visualize=True,
+)
+```
+
+- UFF Force Field for atoms in the structure
+- Cutoff: 12.8 Å
+- Gas Probe Parameters: TraPPE for methane united atom model
+
+![lj_irmof-1](./images/lj_irmof-1.png)
+ 
+### 2. Gaussian potential
+
+Calculate a voxel grid with the Gaussian function:
+
+```python
+from fast_grid import calculate_grids
+
+calculate_grids(
+    structure="examples/irmof-1.cif",
+    grid_size=30,
+    potential="Gaussian",
+    cutoff=12.8,
+    gaussian_height=0.1,
+    gaussian_width=5.0,
+    visualize=True,
+)
+```
+
+- Default Cutoff: 12.8 Å
+- Gaussian Parameters: Height - 0.1, Width - 5.0
+
+![gaussian_irmof-1](./images/gaussian_irmof-1.png)
