@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="fast-grid",
-    version="0.1.4",
+    version="0.1.5",
     description="Fast grid calculation",
     author="Hyunsoo Park",
     author_email="hpark@ic.ac.uk",
