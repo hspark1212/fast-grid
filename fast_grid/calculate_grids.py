@@ -28,7 +28,10 @@ def calculate_grids(
     max_num_atoms: int = 3000,
     gaussian_height: float = 0.1,
     gaussian_width: float = 5.0,
-):
+    float16: bool = False,
+    emax: float = 5000.0,
+    emin: float = -5000.0,
+) -> np.array:
     """Calculate the energy grid for a given structure and force field.
     It takes a structure (ase Atoms object or cif file path) and returns the energy grid.
     The supported potentials are Lennard-Jones and Gaussian.
@@ -48,6 +51,9 @@ def calculate_grids(
     :param max_num_atoms: maximum number of atoms, defaults to 3000
     :param gaussian_height: gaussian height
     :param gaussian_width: gaussian width
+    :param float16: use float16 to save memory, defaults to False
+    :param emax: clip energy values for better visualization, defaults to 5000.0
+    :param emin: clip energy values for better visualization, defaults to -5000.0
     :return: energy grid
     """
     if isinstance(structure, Atoms):
@@ -112,9 +118,18 @@ def calculate_grids(
     else:
         raise NotImplementedError(f"{potential} should be one of ['LJ', 'Gaussian']")
 
+    # convert to float16 to save memory
+    if float16:
+        # clip energy values for np.float16
+        min_float16 = np.finfo(np.float16).min
+        max_float16 = np.finfo(np.float16).max
+        calculated_grids = np.clip(calculated_grids, min_float16, max_float16)
+        # convert to float16
+        calculated_grids = calculated_grids.astype(np.float16)
+
     if visualize:
         print("Visualizing energy grids...")
-        visualize_grids(pos_grid, pos_atoms, calculated_grids)
+        visualize_grids(pos_grid, pos_atoms, calculated_grids, emax, emin)
 
     return calculated_grids
 
