@@ -66,11 +66,13 @@ def calculate_grids(
     else:
         raise TypeError("structure must be an ase Atoms object or a cif file path")
 
-    # assert the cell lengths should be less than 2*cutoff
+    # make supercell when distance between planes is less than cutoff * 2
+    cell_volume = atoms.get_volume()
     cell_vectors = np.array(atoms.cell)
-
-    # make supercell when distance between planes is less than cutoff
-    plane_distances = np.linalg.norm(cell_vectors, axis=1)
+    dist_a = cell_volume / np.linalg.norm(np.cross(cell_vectors[1], cell_vectors[2]))
+    dist_b = cell_volume / np.linalg.norm(np.cross(cell_vectors[2], cell_vectors[0]))
+    dist_c = cell_volume / np.linalg.norm(np.cross(cell_vectors[0], cell_vectors[1]))
+    plane_distances = np.array([dist_a, dist_b, dist_c])
     supercell = np.ceil(2 * cutoff / plane_distances).astype(int)
     atoms = atoms.repeat(supercell)
     if len(atoms) > max_num_atoms:
