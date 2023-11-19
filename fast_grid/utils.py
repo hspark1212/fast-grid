@@ -15,7 +15,7 @@ def mic_distance_matrix(pos1, pos2, cell_vectors):
     """
     N1 = pos1.shape[0]
     N2 = pos2.shape[0]
-    distance_matrix = np.zeros((N1, N2), dtype=np.float64)
+    distance_matrix = np.empty((N1, N2), dtype=np.float32)
     inverse_cell = np.linalg.inv(cell_vectors)
 
     for i in range(N1):

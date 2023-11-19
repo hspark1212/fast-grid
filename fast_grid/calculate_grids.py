@@ -19,6 +19,7 @@ warnings.filterwarnings("ignore")
 def calculate_grids(
     structure: Union[Atoms, str],
     grid_size: Union[int, Iterable] = 30,
+    grid_spacing: float = None,
     ff_type: str = "UFF",
     potential: str = "LJ",
     cutoff: float = 12.8,
@@ -42,6 +43,7 @@ def calculate_grids(
 
     :param structure: structure (ase Atoms object or cif file path)
     :param grid_size: grid size, for example, 30 or "(30, 30, 30)", defaults to 30
+    :param grid_spacing: grid spacing, overrides grid_size, defaults to None
     :param ff_type: force field type, defaults to "UFF"
     :param potential: potential function, gaussian or lj, defaults to "LJ"
     :param cutoff: cutoff distance, defaults to 12.8
@@ -56,6 +58,7 @@ def calculate_grids(
     :param emin: clip energy values for better visualization, defaults to -5000.0
     :return: energy grid
     """
+    # read structure
     if isinstance(structure, Atoms):
         atoms = structure
     elif isinstance(structure, str):
@@ -86,7 +89,14 @@ def calculate_grids(
         grid_size = np.array([grid_size] * 3)
     else:
         grid_size = eval(grid_size)
-        assert len(grid_size) == 3, "grid_size must be a 3-dim vector"
+
+    # override grid_size if grid_spacing is not None
+    if grid_spacing is not None:
+        grid_size = np.ceil(
+            np.array(atoms.get_cell_lengths_and_angles()[:3]) / grid_spacing
+        ).astype(int)
+    assert len(grid_size) == 3, "grid_size must be a 3-dim vector"
+
     indices = np.indices(grid_size).reshape(3, -1).T
     pos_grid = indices.dot(cell_vectors / grid_size)  # (G, 3)
 
@@ -130,7 +140,7 @@ def calculate_grids(
         calculated_grids = calculated_grids.astype(np.float16)
 
     if visualize:
-        print("Visualizing energy grids...")
+        print(f"Visualizing energy grids with {grid_size} grid points")
         visualize_grids(pos_grid, pos_atoms, calculated_grids, emax, emin)
 
     return calculated_grids
