@@ -33,6 +33,5 @@ setup(
             "fast_grid/potential/gaussian.pyx",
         ]
     ),
-    # include_dirs=[np.get_include()],
-    # script_args=["build_ext", "--build-lib", "fast_grid/potential"],
+    include_dirs=[np.get_include()],
 )
