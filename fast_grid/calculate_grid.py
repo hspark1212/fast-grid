@@ -11,24 +11,24 @@ from ase.io import read
 from fast_grid.ff import get_mixing_epsilon_sigma
 from fast_grid.utils import mic_distance_matrix
 from fast_grid.potential import calculate_lj_potential, calculate_gaussian
-from fast_grid.visualize import visualize_grids
+from fast_grid.visualize import visualize_grid
 
 warnings.filterwarnings("ignore")
 
 
-def calculate_grids(
+def calculate_grid(
     structure: Union[Atoms, str],
     grid_size: Union[int, Iterable] = 30,
     grid_spacing: float = None,
     ff_type: str = "UFF",
     potential: str = "LJ",
     cutoff: float = 12.8,
-    gas_epsilon: float = 148.0,
-    gas_sigma: float = 3.73,
+    gas_epsilon: float = 148.0,  # LJ
+    gas_sigma: float = 3.73,  # LJ
     visualize: bool = False,
     max_num_atoms: int = 3000,
-    gaussian_height: float = 0.1,
-    gaussian_width: float = 5.0,
+    gaussian_height: float = 0.1,  # Gaussian
+    gaussian_width: float = 5.0,  # Gaussian
     float16: bool = False,
     emax: float = 5000.0,
     emin: float = -5000.0,
@@ -97,7 +97,7 @@ def calculate_grids(
         ).astype(int)
     assert len(grid_size) == 3, "grid_size must be a 3-dim vector"
 
-    indices = np.indices(grid_size).reshape(3, -1).T
+    indices = np.indices(grid_size).reshape(3, -1).T  # (G, 3)
     pos_grid = indices.dot(cell_vectors / grid_size)  # (G, 3)
 
     # get positions for atoms
@@ -114,14 +114,14 @@ def calculate_grids(
 
     # calculate energy
     if potential.lower() == "lj":
-        calculated_grids = calculate_lj_potential(
+        calculated_grid = calculate_lj_potential(
             dist_matrix,
             epsilon=epsilon,
             sigma=sigma,
             cutoff=cutoff,
         )  # (G,)
     elif potential.lower() == "gaussian":
-        calculated_grids = calculate_gaussian(
+        calculated_grid = calculate_gaussian(
             dist_matrix,
             height=gaussian_height,
             width=gaussian_width,
@@ -135,16 +135,16 @@ def calculate_grids(
         # clip energy values for np.float16
         min_float16 = np.finfo(np.float16).min
         max_float16 = np.finfo(np.float16).max
-        calculated_grids = np.clip(calculated_grids, min_float16, max_float16)
+        calculated_grid = np.clip(calculated_grid, min_float16, max_float16)
         # convert to float16
-        calculated_grids = calculated_grids.astype(np.float16)
+        calculated_grid = calculated_grid.astype(np.float16)
 
     if visualize:
-        print(f"Visualizing energy grids with {grid_size} grid points")
-        visualize_grids(pos_grid, pos_atoms, calculated_grids, emax, emin)
+        print(f"Visualizing energy grid with {grid_size} grid points")
+        visualize_grid(pos_grid, pos_atoms, calculated_grid, emax, emin)
 
-    return calculated_grids
+    return calculated_grid
 
 
 def cli():
-    Fire(calculate_grids)
+    Fire(calculate_grid)
