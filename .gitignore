@@ -9,3 +9,5 @@ dist/
 eggs/
 *.egg-info/
 *.egg
+*.so
+*.c
