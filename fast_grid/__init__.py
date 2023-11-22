@@ -1,3 +1,3 @@
-from fast_grid.calculate_grids import calculate_grids
+from fast_grid.calculate_grid import calculate_grid
 
-__all__ = ["calculate_grids"]
+__all__ = ["calculate_grid"]

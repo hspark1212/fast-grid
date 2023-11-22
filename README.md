@@ -4,10 +4,26 @@
 <h1> Fast Grid 🏁 </h1>
 
   <p>
-    <strong>High-speed Voxel Grid Calculations with Numba</strong>
+    <strong>High-speed Voxel Grid Calculations with Cython</strong>
   </p>
 
 </div>
+
+## Features
+
+### Supported potentials
+- LJ Potential (Lennard-Jones)
+- Gaussian Potential
+
+### Gas Probe Model
+- TraPPE (Methane) [Default]
+
+### Performance ⏱️
+- 30 x 30 x 30 grid with 484 atoms (IRMOF-1) using LJ potential : 472 ms ± 7.64
+- 30 x 30 x 30 grid with 484 atoms (IRMOF-1) using Gaussian potential : 564 ms ± 10.1 ms
+
+
+Check out a [tutorial](tutorial.ipynb) file for more details
 
 ## Installation
 
