@@ -26,7 +26,6 @@ def calculate_grid(
     gas_epsilon: float = 148.0,  # LJ
     gas_sigma: float = 3.73,  # LJ
     visualize: bool = False,
-    max_num_atoms: int = 3000,
     gaussian_height: float = 0.1,  # Gaussian
     gaussian_width: float = 5.0,  # Gaussian
     float16: bool = False,
@@ -51,7 +50,6 @@ def calculate_grid(
     :param gas_epsilon: gas epsilon, in K (methane UA in TraPPE), defaults to 148.0
     :param gas_sigma: gas sigma, in Angstrom (methane UA in TraPPE), defaults to 3.73
     :param visualize: visualize the energy grid, defaults to False
-    :param max_num_atoms: maximum number of atoms, defaults to 3000
     :param gaussian_height: gaussian height
     :param gaussian_width: gaussian width
     :param float16: use float16 to save memory, defaults to False
@@ -80,11 +78,7 @@ def calculate_grid(
     plane_distances = np.array([dist_a, dist_b, dist_c])
     supercell = np.ceil(2 * cutoff / plane_distances).astype(int)
     atoms = atoms.repeat(supercell)
-    if len(atoms) > max_num_atoms:
-        raise ValueError(
-            f"Too many atoms ({len(atoms)}) in the supercell,"
-            f"please decrease the cutoff or increase the max_num_atoms"
-        )
+    cell_vectors = np.array(atoms.cell)  # redefine cell_vectors after supercell
 
     # get position for grid
     if isinstance(grid_size, int):
@@ -169,7 +163,9 @@ def calculate_grid(
         return calculated_grid.reshape(grid_size)
 
     if visualize:
-        print(f"Visualizing energy grid with {grid_size} grid points")
+        print(
+            f"Visualizing energy grid with {grid_size} grid points | supercell: {supercell}"
+        )
         visualize_grid(pos_grid, pos_atoms, calculated_grid, emax, emin)
 
     return calculated_grid
