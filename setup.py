@@ -5,7 +5,7 @@ import numpy as np
 
 setup(
     name="fast-grid",
-    version="0.1.6",
+    version="0.1.7",
     description="Fast grid calculation",
     author="Hyunsoo Park",
     author_email="hpark@ic.ac.uk",
@@ -33,6 +33,6 @@ setup(
             "fast_grid/potential/gaussian.pyx",
         ]
     ),
-    include_dirs=[np.get_include()],
+    # include_dirs=[np.get_include()],
     # script_args=["build_ext", "--build-lib", "fast_grid/potential"],
 )
