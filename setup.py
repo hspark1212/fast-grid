@@ -5,7 +5,7 @@ import numpy as np
 
 setup(
     name="fast-grid",
-    version="0.1.7",
+    version="0.1.8",
     description="Fast grid calculation",
     author="Hyunsoo Park",
     author_email="hpark@ic.ac.uk",
