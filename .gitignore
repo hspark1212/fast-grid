@@ -10,12 +10,7 @@ eggs/
 wheelhouse/
 *.egg-info/
 *.egg
-<<<<<<< HEAD
 wheelhouse/
 
 # Version control
 fast_grid/potential/
-=======
-*.so
-*.c
->>>>>>> 3078b916b4982a35e30c91e6df77c76480bf4184
