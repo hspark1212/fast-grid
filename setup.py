@@ -1,6 +1,4 @@
 from setuptools import setup, find_packages
-from Cython.Build import cythonize
-import numpy as np
 
 
 setup(
@@ -22,13 +20,4 @@ setup(
     package_data={"fast_grid": ["assets/*.csv"]},
     include_package_data=True,
     python_requires=">=3.9",
-    # cython
-    setup_requires=["cython"],
-    ext_modules=cythonize(
-        [
-            "fast_grid/potential/lj_potential.pyx",
-            "fast_grid/potential/gaussian.pyx",
-        ]
-    ),
-    include_dirs=[np.get_include()],
 )
