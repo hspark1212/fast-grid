@@ -4,10 +4,19 @@
 <h1> Fast Grid 🏁 </h1>
 
   <p>
-    <strong>High-speed Voxel Grid Calculations with Numba</strong>
+    <strong>High-speed Voxel Grid Calculations</strong>
   </p>
 
 </div>
+
+## Features
+
+### Supported potentials
+- LJ Potential (Lennard-Jones)
+- Gaussian Potential
+
+### Gas Probe Model
+- TraPPE (Methane) [Default]
 
 ## Installation
 
@@ -29,6 +38,8 @@ fast-grid --help
 ```bash
 fast-grid --structure=examples/irmof-1.cif --visualize=True
 ```
+
+Check out a [tutorial](tutorial.ipynb) file for more details
 
 ## Usage
 

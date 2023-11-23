@@ -9,3 +9,7 @@ dist/
 eggs/
 *.egg-info/
 *.egg
+wheelhouse/
+
+# Version control
+fast_grid/potential/

@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="fast-grid",
-    version="0.1.5",
+    version="0.1.10",
     description="Fast grid calculation",
     author="Hyunsoo Park",
     author_email="hpark@ic.ac.uk",
@@ -14,6 +14,7 @@ setup(
         "fire",
         "plotly",
         "pandas",
+        "MDAnalysis",
     ],
     entry_points={"console_scripts": ["fast-grid=fast_grid.calculate_grids:cli"]},
     packages=find_packages(),

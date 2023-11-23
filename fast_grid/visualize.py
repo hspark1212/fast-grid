@@ -3,15 +3,15 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
 
-def visualize_grids(
+def visualize_grid(
     pos_grid: np.array,
     pos_atoms: np.array,
-    calculated_grids: np.array,
+    calculated_grid: np.array,
     emax: float = 5000,
     emin: float = -5000,
 ):
     # clip energy values for better visualization
-    calculated_grids = np.clip(calculated_grids, emin, emax)
+    calculated_grid = np.clip(calculated_grid, emin, emax)
 
     # Create figure with subplots
     fig = make_subplots(rows=1, cols=1, specs=[[{"type": "scatter3d"}]])
@@ -28,7 +28,7 @@ def visualize_grids(
             ),
             marker=dict(
                 size=6,
-                color=calculated_grids,
+                color=calculated_grid,
                 colorscale="RdBu",
                 opacity=0.9,
                 colorbar=dict(
