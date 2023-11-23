@@ -24,14 +24,15 @@ def calculate_grid(
     ff_type: str = "UFF",
     potential: str = "LJ",
     cutoff: float = 12.8,
-    gas_epsilon: float = 148.0,
-    gas_sigma: float = 3.73,
+    gas_epsilon: float = 148.0,  # LJ
+    gas_sigma: float = 3.73,  # LJ
     visualize: bool = False,
     gaussian_height: float = 0.1,
     gaussian_width: float = 5.0,
     float16: bool = False,
     emax: float = 5000.0,
     emin: float = -5000.0,
+    output_shape_grid: bool = False,
 ) -> np.array:
     """Calculate the energy grid for a given structure and force field.
     It takes a structure (ase Atoms object or cif file path) and returns the energy grid.
@@ -43,6 +44,7 @@ def calculate_grid(
 
     :param structure: structure (ase Atoms object or cif file path)
     :param grid_size: grid size, for example, 30 or "(30, 30, 30)", defaults to 30
+    :param grid_spacing: grid spacing, overrides grid_size, defaults to None
     :param ff_type: force field type, defaults to "UFF"
     :param potential: potential function, gaussian or lj, defaults to "LJ"
     :param cutoff: cutoff distance, defaults to 12.8
@@ -54,8 +56,10 @@ def calculate_grid(
     :param float16: use float16 to save memory, defaults to False
     :param emax: clip energy values for better visualization, defaults to 5000.0
     :param emin: clip energy values for better visualization, defaults to -5000.0
+    :param output_shape_grid: output shape of energy grid, defaults to False
     :return: energy grid
     """
+    # read structure
     if isinstance(structure, Atoms):
         atoms = structure
     elif isinstance(structure, str):
@@ -124,6 +128,9 @@ def calculate_grid(
         )  # (G,)
     else:
         raise NotImplementedError(f"{potential} should be one of ['LJ', 'Gaussian']")
+
+    # flatten energy grid
+    calculated_grid = calculated_grid.reshape(-1)  # (G,)
 
     # convert to float16 to save memory
     if float16:
