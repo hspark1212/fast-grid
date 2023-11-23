@@ -4,7 +4,11 @@
 <h1> Fast Grid 🏁 </h1>
 
   <p>
+<<<<<<< HEAD
     <strong>High-speed Voxel Grid Calculations</strong>
+=======
+    <strong>High-speed Voxel Grid Calculations with Cython</strong>
+>>>>>>> 3078b916b4982a35e30c91e6df77c76480bf4184
   </p>
 
 </div>
@@ -18,6 +22,16 @@
 ### Gas Probe Model
 - TraPPE (Methane) [Default]
 
+<<<<<<< HEAD
+=======
+### Performance ⏱️
+- 30 x 30 x 30 grid with 484 atoms (IRMOF-1) using LJ potential : 472 ms ± 7.64
+- 30 x 30 x 30 grid with 484 atoms (IRMOF-1) using Gaussian potential : 564 ms ± 10.1 ms
+
+
+Check out a [tutorial](tutorial.ipynb) file for more details
+
+>>>>>>> 3078b916b4982a35e30c91e6df77c76480bf4184
 ## Installation
 
 To install Fast Grid, run the following command in your terminal:

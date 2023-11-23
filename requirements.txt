@@ -5,4 +5,8 @@ pandas
 plotly
 ipykernel
 nbformat
+<<<<<<< HEAD
 MDAnalysis
+=======
+cython
+>>>>>>> 3078b916b4982a35e30c91e6df77c76480bf4184
