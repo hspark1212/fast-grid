@@ -11,6 +11,8 @@ wheelhouse/
 *.egg-info/
 *.egg
 wheelhouse/
+*.so
+*.c
 
 # Version control
-fast_grid/potential/
+*_old

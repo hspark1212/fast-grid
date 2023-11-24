@@ -4,7 +4,7 @@
 <h1> Fast Grid 🏁 </h1>
 
   <p>
-    <strong>High-speed Voxel Grid Calculations</strong>
+    <strong>High-speed Voxel Grid Calculations with Cython</strong>
   </p>
 
 </div>

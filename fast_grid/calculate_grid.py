@@ -8,10 +8,8 @@ import numpy as np
 from ase import Atoms
 from ase.io import read
 
-from MDAnalysis.lib.distances import distance_array as mic_distance_matrix
-
 from fast_grid.ff import get_mixing_epsilon_sigma
-from fast_grid.potential import calculate_lj_potential, calculate_gaussian
+from fast_grid.libs import lj_potential_cython, gaussian_cython
 from fast_grid.visualize import visualize_grid
 
 warnings.filterwarnings("ignore")
@@ -95,7 +93,7 @@ def calculate_grid(
         ).astype(int)
     assert len(grid_size) == 3, "grid_size must be a 3-dim vector"
 
-    indices = np.indices(grid_size).reshape(3, -1).T
+    indices = np.indices(grid_size).reshape(3, -1).T  # (G, 3)
     pos_grid = indices.dot(cell_vectors / grid_size)  # (G, 3)
 
     # get positions for atoms
@@ -107,30 +105,27 @@ def calculate_grid(
         symbols, ff_type, gas_epsilon, gas_sigma
     )  # (N,) (N,)
 
-    # calculate distance matrix
-    box = atoms.cell.cellpar()
-    dist_matrix = mic_distance_matrix(pos_grid, pos_atoms, box)  # (G, N)
-
     # calculate energy
     if potential.lower() == "lj":
-        calculated_grid = calculate_lj_potential(
-            dist_matrix,
-            epsilon=epsilon,
-            sigma=sigma,
-            cutoff=cutoff,
+        calculated_grid = lj_potential_cython(
+            pos_grid,
+            pos_atoms,
+            cell_vectors,
+            epsilon,
+            sigma,
+            cutoff,
         )  # (G,)
     elif potential.lower() == "gaussian":
-        calculated_grid = calculate_gaussian(
-            dist_matrix,
-            height=gaussian_height,
-            width=gaussian_width,
-            cutoff=cutoff,
+        calculated_grid = gaussian_cython(
+            pos_grid,
+            pos_atoms,
+            cell_vectors,
+            gaussian_height,
+            gaussian_width,
+            cutoff,
         )  # (G,)
     else:
         raise NotImplementedError(f"{potential} should be one of ['LJ', 'Gaussian']")
-
-    # flatten energy grid
-    calculated_grid = calculated_grid.reshape(-1)  # (G,)
 
     # convert to float16 to save memory
     if float16:
@@ -144,6 +139,9 @@ def calculate_grid(
     if visualize:
         print(f"Visualizing energy grid | supercell {supercell}...")
         visualize_grid(pos_grid, pos_atoms, calculated_grid, emax, emin)
+
+    if output_shape_grid:
+        return calculated_grid.reshape(grid_size)
 
     return calculated_grid
 
