@@ -30,6 +30,7 @@ def calculate_grid(
     float16: bool = False,
     emax: float = 5000.0,
     emin: float = -5000.0,
+    output_shape_grid: bool = False,
 ) -> np.array:
     """Calculate the energy grid for a given structure and force field.
     It takes a structure (ase Atoms object or cif file path) and returns the energy grid.
@@ -92,7 +93,7 @@ def calculate_grid(
         ).astype(int)
     assert len(grid_size) == 3, "grid_size must be a 3-dim vector"
 
-    indices = np.indices(grid_size).reshape(3, -1).T
+    indices = np.indices(grid_size).reshape(3, -1).T  # (G, 3)
     pos_grid = indices.dot(cell_vectors / grid_size)  # (G, 3)
 
     # get positions for atoms
@@ -126,9 +127,6 @@ def calculate_grid(
     else:
         raise NotImplementedError(f"{potential} should be one of ['LJ', 'Gaussian']")
 
-    # flatten energy grid
-    calculated_grid = calculated_grid.reshape(-1)  # (G,)
-
     # convert to float16 to save memory
     if float16:
         # clip energy values for np.float16
@@ -141,6 +139,9 @@ def calculate_grid(
     if visualize:
         print(f"Visualizing energy grid | supercell {supercell}...")
         visualize_grid(pos_grid, pos_atoms, calculated_grid, emax, emin)
+
+    if output_shape_grid:
+        return calculated_grid.reshape(grid_size)
 
     return calculated_grid
 
