@@ -8,10 +8,8 @@ import numpy as np
 from ase import Atoms
 from ase.io import read
 
-from MDAnalysis.lib.distances import distance_array as mic_distance_matrix
-
 from fast_grid.ff import get_mixing_epsilon_sigma
-from fast_grid.potential import calculate_lj_potential, calculate_gaussian
+from fast_grid.libs import lj_potential_cython, gaussian_cython
 from fast_grid.visualize import visualize_grid
 
 warnings.filterwarnings("ignore")
@@ -32,7 +30,6 @@ def calculate_grid(
     float16: bool = False,
     emax: float = 5000.0,
     emin: float = -5000.0,
-    output_shape_grid: bool = False,
 ) -> np.array:
     """Calculate the energy grid for a given structure and force field.
     It takes a structure (ase Atoms object or cif file path) and returns the energy grid.
@@ -107,24 +104,24 @@ def calculate_grid(
         symbols, ff_type, gas_epsilon, gas_sigma
     )  # (N,) (N,)
 
-    # calculate distance matrix
-    box = atoms.cell.cellpar()
-    dist_matrix = mic_distance_matrix(pos_grid, pos_atoms, box)  # (G, N)
-
     # calculate energy
     if potential.lower() == "lj":
-        calculated_grid = calculate_lj_potential(
-            dist_matrix,
-            epsilon=epsilon,
-            sigma=sigma,
-            cutoff=cutoff,
+        calculated_grid = lj_potential_cython(
+            pos_grid,
+            pos_atoms,
+            cell_vectors,
+            epsilon,
+            sigma,
+            cutoff,
         )  # (G,)
     elif potential.lower() == "gaussian":
-        calculated_grid = calculate_gaussian(
-            dist_matrix,
-            height=gaussian_height,
-            width=gaussian_width,
-            cutoff=cutoff,
+        calculated_grid = gaussian_cython(
+            pos_grid,
+            pos_atoms,
+            cell_vectors,
+            gaussian_height,
+            gaussian_width,
+            cutoff,
         )  # (G,)
     else:
         raise NotImplementedError(f"{potential} should be one of ['LJ', 'Gaussian']")
