@@ -25,7 +25,7 @@ def calculate_grid(
     gas_epsilon: float = 148.0,  # LJ
     gas_sigma: float = 3.73,  # LJ
     visualize: bool = False,
-    gaussian_height: float = 0.1,
+    gaussian_height: float = 1.0,
     gaussian_width: float = 5.0,
     float16: bool = False,
     emax: float = 5000.0,
@@ -49,8 +49,8 @@ def calculate_grid(
     :param gas_epsilon: gas epsilon, in K (methane UA in TraPPE), defaults to 148.0
     :param gas_sigma: gas sigma, in Angstrom (methane UA in TraPPE), defaults to 3.73
     :param visualize: visualize the energy grid, defaults to False
-    :param gaussian_height: gaussian height
-    :param gaussian_width: gaussian width
+    :param gaussian_height: gaussian height, defaults to 1.0
+    :param gaussian_width: gaussian width, defaults to 5.0
     :param float16: use float16 to save memory, defaults to False
     :param emax: clip energy values for better visualization, defaults to 5000.0
     :param emin: clip energy values for better visualization, defaults to -5000.0

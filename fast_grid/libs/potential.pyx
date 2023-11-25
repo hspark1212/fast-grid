@@ -113,7 +113,7 @@ def gaussian_cython(np.ndarray[np.float64_t, ndim=2] pos1,
             r2 = diff[0] * diff[0] + diff[1] * diff[1] + diff[2] * diff[2]
 
             if r2 < cutoff_squared and r2 > threshold:
-                energy += height * exp(r2 / width_squared)
+                energy += height * exp(-1 * r2 / width_squared)
         
         energy_grid[i] += energy
     
