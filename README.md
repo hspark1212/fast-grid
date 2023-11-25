@@ -66,7 +66,7 @@ calculate_grids(
 - Cutoff: 12.8 Å
 - Gas Probe Parameters: TraPPE for methane united atom model
 
-![lj_irmof-1](./images/lj_irmof-1.png)
+![lj_irmof-1](./images/irmof-1_lj.png)
  
 ### 2. Gaussian potential
 
@@ -80,13 +80,13 @@ calculate_grids(
     grid_size=30,
     potential="Gaussian",
     cutoff=12.8,
-    gaussian_height=0.1,
+    gaussian_height=1.0,
     gaussian_width=5.0,
     visualize=True,
 )
 ```
 
 - Default Cutoff: 12.8 Å
-- Gaussian Parameters: Height - 0.1, Width - 5.0
+- Gaussian Parameters: Height - 1.0, Width - 5.0
 
-![gaussian_irmof-1](./images/gaussian_irmof-1.png)
+![gaussian_irmof-1](./images/irmof-1_gaussian.png)
