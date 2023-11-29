@@ -48,9 +48,9 @@ Check out a [tutorial](tutorial.ipynb) file for more details
 Calculate a 30x30x30 energy grid using the LJ potential:
 
 ```python
-from fast_grid import calculate_grids
+from fast_grid import calculate_grid
 
-calculate_grids(
+calculate_grid(
     structure="examples/irmof-1.cif",
     grid_size=30,
     ff_type="UFF",
@@ -73,9 +73,9 @@ calculate_grids(
 Calculate a voxel grid with the Gaussian function:
 
 ```python
-from fast_grid import calculate_grids
+from fast_grid import calculate_grid
 
-calculate_grids(
+calculate_grid(
     structure="examples/irmof-1.cif",
     grid_size=30,
     potential="Gaussian",
