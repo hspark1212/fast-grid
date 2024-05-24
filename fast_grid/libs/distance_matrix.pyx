@@ -8,6 +8,9 @@ cimport numpy as np
 from libc.math cimport sqrt
 
 
+@cython.boundscheck(False)
+@cython.wraparound(False)
+@cython.cdivision(True)
 def distance_matrix_triclinic_cython(np.ndarray[np.float64_t, ndim=2] pos1,
                               np.ndarray[np.float64_t, ndim=2] pos2, 
                               np.ndarray[np.float64_t, ndim=2] box):
