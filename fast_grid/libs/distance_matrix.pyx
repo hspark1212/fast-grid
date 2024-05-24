@@ -51,8 +51,6 @@ def distance_matrix_triclinic_cython(np.ndarray[np.float64_t, ndim=2] pos1,
                             dx_min[1] = rz1
                             dx_min[2] = rz2
                     
-            # with gil:
-            #    minimum_image_triclinic(diff, box)
             r2 = dx_min[0] * dx_min[0] + dx_min[1] * dx_min[1] + dx_min[2] * dx_min[2]
             distances[i, j] = sqrt(r2)
     
