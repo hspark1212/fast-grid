@@ -13,13 +13,20 @@ jobs:
     steps:
       - uses: actions/checkout@v4    
 
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+
+      - name: Install cibuildwheel
+        run: pip install cibuildwheel
+
       - name: Build wheels
-        uses: pypa/cibuildwheel@v2.16.2
+        run: cibuildwheel --output-dir wheelhouse
         env:
-            # Build wheels for CPython only, skipping PyPy
-            CIBW_BUILD: "cp*"
-            CIBW_SKIP: "*-pp*"
-        
+          CIBW_BUILD: "cp*"
+          CIBW_SKIP: "*-pp*"
+
       - uses: actions/upload-artifact@v3
         with:
           name: artifact-name
