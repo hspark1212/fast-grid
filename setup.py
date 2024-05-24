@@ -4,10 +4,10 @@ import numpy as np
 
 setup(
     name="fast-grid",
-    version="0.1.13",
+    version="0.1.14",
     description="Fast grid calculation",
     author="Hyunsoo Park",
-    author_email="hpark@ic.ac.uk",
+    author_email="phs68660888@gmail.com",
     url="https://github.com/hspark1212/fast-grid.git",
     install_requires=[
         "ase",
