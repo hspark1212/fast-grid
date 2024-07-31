@@ -9,9 +9,17 @@ def visualize_grid(
     calculated_grid: np.array,
     emax: float = 5000,
     emin: float = -5000,
+    pallete: str = "RdBu",
 ):
     # clip energy values for better visualization
     calculated_grid = np.clip(calculated_grid, emin, emax)
+
+    # Create a custom colorscale for energy values
+    transparent_colorscale = [
+        [0.0, "rgba(0, 0, 255, 0)"],  # Transparent for low values
+        [0.5, "rgba(0, 0, 255, 0)"],  # Still transparent in the middle
+        [1.0, "rgba(0, 0, 255, 0.5)"],  # Opaque red for high values
+    ]
 
     # Create figure with subplots
     fig = make_subplots(rows=1, cols=1, specs=[[{"type": "scatter3d"}]])
@@ -29,7 +37,9 @@ def visualize_grid(
             marker=dict(
                 size=6,
                 color=calculated_grid,
-                colorscale="RdBu",
+                colorscale=(
+                    transparent_colorscale if pallete == "transparent" else pallete
+                ),
                 opacity=0.9,
                 colorbar=dict(
                     thickness=20,
@@ -52,7 +62,7 @@ def visualize_grid(
             z=pos_atoms[:, 2],
             mode="markers",
             hovertemplate="Position: (%{x:.2f}, %{y:.2f}, %{z:.2f})",
-            marker=dict(size=6, color="rgba(0, 0, 0, 0.5)"),
+            marker=dict(size=6, color="rgba(0, 0, 0, 1.0)"),
             showlegend=False,
         ),
         row=1,

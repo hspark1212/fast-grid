@@ -30,6 +30,7 @@ def calculate_grid(
     float16: bool = False,
     emax: float = 5000.0,
     emin: float = -5000.0,
+    pallete: str = "RdBu",
     return_dict: bool = False,
 ) -> np.array:
     """Calculate the energy grid for a given structure and force field.
@@ -54,6 +55,7 @@ def calculate_grid(
     :param float16: use float16 to save memory, defaults to False
     :param emax: clip energy values for better visualization, defaults to 5000.0
     :param emin: clip energy values for better visualization, defaults to -5000.0
+    :param pallete: color pallete for visualization, defaults to "RdBu"
     :param return_dict: return a dictionary of outputs, defaults to False
     :return: energy grid
     """
@@ -138,7 +140,7 @@ def calculate_grid(
 
     if visualize:
         print(f"Visualizing energy grid | supercell {supercell}...")
-        visualize_grid(pos_grid, pos_atoms, calculated_grid, emax, emin)
+        visualize_grid(pos_grid, pos_atoms, calculated_grid, emax, emin, pallete)
 
     if return_dict:
         return {
