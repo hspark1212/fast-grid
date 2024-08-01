@@ -7,9 +7,10 @@ from fire import Fire
 import numpy as np
 from ase import Atoms
 from ase.io import read
+import MDAnalysis as mda
 
 from fast_grid.ff import get_mixing_epsilon_sigma
-from fast_grid.libs import lj_potential_cython, gaussian_cython
+from fast_grid.potential import lj_potential, gaussian
 from fast_grid.visualize import visualize_grid
 
 warnings.filterwarnings("ignore")
@@ -70,16 +71,24 @@ def calculate_grid(
     else:
         raise TypeError("structure must be an ase Atoms object or a cif file path")
 
-    # make supercell when distance between planes is less than cutoff * 2
-    cell_volume = atoms.get_volume()
-    cell_vectors = np.array(atoms.cell)
-    dist_a = cell_volume / np.linalg.norm(np.cross(cell_vectors[1], cell_vectors[2]))
-    dist_b = cell_volume / np.linalg.norm(np.cross(cell_vectors[2], cell_vectors[0]))
-    dist_c = cell_volume / np.linalg.norm(np.cross(cell_vectors[0], cell_vectors[1]))
-    plane_distances = np.array([dist_a, dist_b, dist_c])
-    supercell = np.ceil(2 * cutoff / plane_distances).astype(int)
-    atoms = atoms.repeat(supercell)  # make supercell
-
+    if potential.lower() == "lj":
+        # make supercell when distance between planes is less than cutoff * 2
+        cell_volume = atoms.get_volume()
+        cell_vectors = np.array(atoms.cell)
+        dist_a = cell_volume / np.linalg.norm(
+            np.cross(cell_vectors[1], cell_vectors[2])
+        )
+        dist_b = cell_volume / np.linalg.norm(
+            np.cross(cell_vectors[2], cell_vectors[0])
+        )
+        dist_c = cell_volume / np.linalg.norm(
+            np.cross(cell_vectors[0], cell_vectors[1])
+        )
+        plane_distances = np.array([dist_a, dist_b, dist_c])
+        supercell = np.ceil(2 * cutoff / plane_distances).astype(int)
+        atoms = atoms.repeat(supercell)  # make supercell
+    else:
+        supercell = np.array((1, 1, 1))
     cell_vectors = np.array(atoms.cell)  # redefine cell_vectors after supercell
 
     # get position for grid
@@ -101,6 +110,11 @@ def calculate_grid(
     # get positions for atoms
     pos_atoms = atoms.get_positions()  # (N, 3)
 
+    # distance matrix
+    dist_matrix = mda.lib.distances.distance_array(
+        pos_grid, pos_atoms, box=atoms.cell.cellpar()
+    )  # (G, N)
+
     # setting force field
     symbols = atoms.get_chemical_symbols()
     epsilon, sigma = get_mixing_epsilon_sigma(
@@ -109,23 +123,10 @@ def calculate_grid(
 
     # calculate energy
     if potential.lower() == "lj":
-        calculated_grid = lj_potential_cython(
-            pos_grid,
-            pos_atoms,
-            cell_vectors,
-            epsilon,
-            sigma,
-            cutoff,
-        )  # (G,)
+        calculated_grid = lj_potential(dist_matrix, epsilon, sigma, cutoff)  # (G,)
+
     elif potential.lower() == "gaussian":
-        calculated_grid = gaussian_cython(
-            pos_grid,
-            pos_atoms,
-            cell_vectors,
-            gaussian_height,
-            gaussian_width,
-            cutoff,
-        )  # (G,)
+        calculated_grid = gaussian(dist_matrix, gaussian_height, gaussian_width)  # (G,)
     else:
         raise NotImplementedError(f"{potential} should be one of ['LJ', 'Gaussian']")
 
@@ -140,7 +141,15 @@ def calculate_grid(
 
     if visualize:
         print(f"Visualizing energy grid | supercell {supercell}...")
-        visualize_grid(pos_grid, pos_atoms, calculated_grid, emax, emin, pallete)
+        visualize_grid(
+            pos_grid,
+            atoms,
+            calculated_grid,
+            dist_matrix,
+            emax,
+            emin,
+            pallete,
+        )
 
     if return_dict:
         return {
@@ -148,6 +157,7 @@ def calculate_grid(
             "supercell": supercell,
             "pos_grid": pos_grid,
             "calculated_grid": calculated_grid,
+            "dist_matrix": dist_matrix,
         }
 
     return calculated_grid

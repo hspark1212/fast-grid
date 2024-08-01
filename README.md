@@ -4,7 +4,7 @@
 <h1> Fast Grid 🏁 </h1>
 
   <p>
-    <strong>High-speed Voxel Grid Calculations with Cython</strong>
+    <strong>High-speed Voxel Grid Calculations</strong>
   </p>
 
 </div>
@@ -66,7 +66,7 @@ calculate_grid(
 - Cutoff: 12.8 Å
 - Gas Probe Parameters: TraPPE for methane united atom model
 
-![lj_irmof-1](./images/irmof-1_lj.png)
+![lj_irmof-1](./images/lj_example.png)
  
 ### 2. Gaussian potential
 
@@ -74,19 +74,20 @@ Calculate a voxel grid with the Gaussian function:
 
 ```python
 from fast_grid import calculate_grid
+from ase.build import bulk
 
+atoms = bulk("Cu", "fcc", a=3.6, cubic=True)
 calculate_grid(
-    structure="examples/irmof-1.cif",
-    grid_size=30,
+    structure=atoms,
+    grid_spacing=0.2,
     potential="Gaussian",
-    cutoff=12.8,
     gaussian_height=1.0,
-    gaussian_width=5.0,
+    gaussian_width=1.0,
     visualize=True,
+    pallete="atomic",
 )
 ```
 
-- Default Cutoff: 12.8 Å
-- Gaussian Parameters: Height - 1.0, Width - 5.0
+- Gaussian Parameters: Height - 1.0, Width - 1.0
 
-![gaussian_irmof-1](./images/irmof-1_gaussian.png)
+![gaussian_irmof-1](./images/gaussian_example.png)
