@@ -115,14 +115,13 @@ def calculate_grid(
         pos_grid, pos_atoms, box=atoms.cell.cellpar()
     )  # (G, N)
 
-    # setting force field
-    symbols = atoms.get_chemical_symbols()
-    epsilon, sigma = get_mixing_epsilon_sigma(
-        symbols, ff_type, gas_epsilon, gas_sigma
-    )  # (N,) (N,)
-
     # calculate energy
     if potential.lower() == "lj":
+        # setting force field
+        symbols = atoms.get_chemical_symbols()
+        epsilon, sigma = get_mixing_epsilon_sigma(
+            symbols, ff_type, gas_epsilon, gas_sigma
+        )  # (N,) (N,)
         calculated_grid = lj_potential(dist_matrix, epsilon, sigma, cutoff)  # (G,)
 
     elif potential.lower() == "gaussian":
