@@ -1,0 +1,33 @@
+name: Build and upload to PyPI
+
+on: [push, pull_request]
+
+jobs:
+  build_wheels:
+    name: Build wheels on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-22.04, macos-11, windows-2019]
+
+    steps:
+      - uses: actions/checkout@v4    
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+
+      - name: Install cibuildwheel
+        run: pip install cibuildwheel
+
+      - name: Build wheels
+        run: cibuildwheel --output-dir wheelhouse
+        env:
+          CIBW_BUILD: "cp*"
+          CIBW_SKIP: "*-pp*"
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: artifact-name
+          path: ./wheelhouse/*.whl
