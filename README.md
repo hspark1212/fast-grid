@@ -36,7 +36,7 @@ fast-grid --help
 - Run an example to generaate enegy grid with the LJ potential
 
 ```bash
-fast-grid --structure=examples/irmof-1.cif --visualize=True
+fast-grid --atoms=examples/irmof-1.cif --visualize=True
 ```
 
 Check out a [tutorial](tutorial.ipynb) file for more details
@@ -51,7 +51,7 @@ Calculate a 30x30x30 energy grid using the LJ potential:
 from fast_grid import calculate_grid
 
 calculate_grid(
-    structure="examples/irmof-1.cif",
+    atoms="examples/irmof-1.cif",
     grid_size=30,
     ff_type="UFF",
     potential="LJ",
@@ -78,7 +78,7 @@ from ase.build import bulk
 
 atoms = bulk("Cu", "fcc", a=3.6, cubic=True)
 calculate_grid(
-    structure=atoms,
+    atoms=atoms,
     grid_spacing=0.2,
     potential="Gaussian",
     gaussian_height=1.0,
