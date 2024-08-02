@@ -49,6 +49,6 @@ def gaussian(dist_matrix, height, width):
     p = height * np.exp(-((dist_matrix / width) ** 2))  # (G, N)
 
     # Sum the energy along the N axis
-    energy = np.sum(p, axis=1)  # (G,)
+    energy = np.max(p, axis=1)  # (G,)
 
     return energy
