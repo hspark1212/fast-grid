@@ -17,7 +17,7 @@ warnings.filterwarnings("ignore")
 
 
 def calculate_grid(
-    structure: Union[Atoms, str],
+    atoms: Union[Atoms, str],
     grid_size: Union[int, Iterable] = 30,
     grid_spacing: float = None,
     ff_type: str = "UFF",
@@ -33,6 +33,8 @@ def calculate_grid(
     emin: float = -5000.0,
     pallete: str = "RdBu",
     atomic_pallete_threshold: float = 0.5,
+    view_atoms: bool = True,
+    grid_view: bool = False,
     return_dict: bool = False,
 ) -> np.array:
     """Calculate the energy grid for a given structure and force field.
@@ -43,7 +45,7 @@ def calculate_grid(
     The unit of energy is K and the unit of distance is Angstrom.
     The output shape of energy grid is grid_size * grid_size * grid_size.
 
-    :param structure: structure (ase Atoms object or cif file path)
+    :param atoms: ase Atoms object or cif file path
     :param grid_size: grid size, for example, 30 or "(30, 30, 30)", defaults to 30
     :param grid_spacing: grid spacing, overrides grid_size, defaults to None
     :param ff_type: force field type, defaults to "UFF"
@@ -59,17 +61,18 @@ def calculate_grid(
     :param emin: clip energy values for better visualization, defaults to -5000.0
     :param pallete: color pallete for visualization, defaults to "RdBu"
     :param atomic_pallete_threshold: atomic pallete threshold, defaults to 0.5
+    :param view_atoms: visualize atoms, defaults to True
+    :param grid_view: visualize the grid, defaults to False
     :param return_dict: return a dictionary of outputs, defaults to False
     :return: energy grid
     """
-    # read structure
-    if isinstance(structure, Atoms):
-        atoms = structure
-    elif isinstance(structure, str):
-        if Path(structure).exists():
-            atoms = read(structure)
+    if isinstance(atoms, Atoms):
+        pass
+    elif isinstance(atoms, str):
+        if Path(atoms).exists():
+            atoms = read(atoms)
         else:
-            raise FileNotFoundError(f"{structure} does not exist")
+            raise FileNotFoundError(f"{atoms} does not exist")
     else:
         raise TypeError("structure must be an ase Atoms object or a cif file path")
 
@@ -108,7 +111,6 @@ def calculate_grid(
 
     indices = np.indices(grid_size).reshape(3, -1).T  # (G, 3)
     pos_grid = indices.dot(cell_vectors / grid_size)  # (G, 3)
-
     # get positions for atoms
     pos_atoms = atoms.get_positions()  # (N, 3)
 
@@ -143,14 +145,16 @@ def calculate_grid(
     if visualize:
         print(f"Visualizing energy grid | supercell {supercell}...")
         visualize_grid(
-            pos_grid,
-            atoms,
-            calculated_grid,
-            dist_matrix,
-            emax,
-            emin,
-            pallete,
-            atomic_pallete_threshold,
+            pos_grid=indices if grid_view else pos_grid,
+            atoms=atoms,
+            calculated_grid=calculated_grid,
+            cell_vectors=np.diag(grid_size) if grid_view else cell_vectors,
+            dist_matrix=dist_matrix,
+            emax=emax,
+            emin=emin,
+            pallete=pallete,
+            atomic_pallete_threshold=atomic_pallete_threshold,
+            view_atoms=view_atoms,
         )
 
     if return_dict:

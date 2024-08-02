@@ -9,14 +9,17 @@ def visualize_grid(
     pos_grid: np.array,
     atoms: Atoms,
     calculated_grid: np.array,
+    cell_vectors: np.array = None,
     dist_matrix: np.array = None,
     emax: float = 5000,
     emin: float = -5000,
     pallete: str = "RdBu",
     atomic_pallete_threshold: float = 0.5,
+    view_atoms: bool = True,
 ):
     pos_atoms = atoms.get_positions()
-    cell_vectors = np.array(atoms.cell)
+    if cell_vectors is None:
+        cell_vectors = np.array(atoms.cell)
     # clip energy values for better visualization
     calculated_grid = np.clip(calculated_grid, emin, emax)
 
@@ -103,24 +106,25 @@ def visualize_grid(
         ),
     )
 
-    # Add a plot for atoms
-    fig.add_trace(
-        go.Scatter3d(
-            x=pos_atoms[:, 0],
-            y=pos_atoms[:, 1],
-            z=pos_atoms[:, 2],
-            mode="markers",
-            hovertemplate="Position: (%{x:.2f}, %{y:.2f}, %{z:.2f})",
-            marker=dict(
-                size=10,
-                color=[
-                    "rgb" + str(tuple(jmol_colors[atom] * 255))
-                    for atom in atoms.numbers
-                ],
+    if view_atoms:
+        # Add a plot for atoms
+        fig.add_trace(
+            go.Scatter3d(
+                x=pos_atoms[:, 0],
+                y=pos_atoms[:, 1],
+                z=pos_atoms[:, 2],
+                mode="markers",
+                hovertemplate="Position: (%{x:.2f}, %{y:.2f}, %{z:.2f})",
+                marker=dict(
+                    size=10,
+                    color=[
+                        "rgb" + str(tuple(jmol_colors[atom] * 255))
+                        for atom in atoms.numbers
+                    ],
+                ),
+                showlegend=False,
             ),
-            showlegend=False,
-        ),
-    )
+        )
 
     # update layout
     # Customize the layout with a background theme
