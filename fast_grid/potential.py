@@ -1,8 +1,6 @@
 import numpy as np
-from numba import jit
 
 
-@jit(nopython=True)
 def lj_potential(dist_matrix, epsilon, sigma, cutoff):
     """
     Calculate the Lennard-Jones potential energy based on distances, with a cutoff.
@@ -32,7 +30,6 @@ def lj_potential(dist_matrix, epsilon, sigma, cutoff):
     return energy
 
 
-@jit(nopython=True)
 def gaussian(dist_matrix, height, width):
     """
     Calculate the Simplified Gaussian potential energy based on distances.
