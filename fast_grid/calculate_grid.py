@@ -27,7 +27,7 @@ def calculate_grid(
     gas_sigma: float = 3.73,  # LJ
     visualize: bool = False,
     gaussian_height: float = 1.0,
-    gaussian_width: float = 5.0,
+    gaussian_width: float = 1.0,
     float16: bool = False,
     emax: float = 5000.0,
     emin: float = -5000.0,
