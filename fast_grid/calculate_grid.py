@@ -32,6 +32,7 @@ def calculate_grid(
     emax: float = 5000.0,
     emin: float = -5000.0,
     pallete: str = "RdBu",
+    atomic_pallete_threshold: float = 0.5,
     return_dict: bool = False,
 ) -> np.array:
     """Calculate the energy grid for a given structure and force field.
@@ -57,6 +58,7 @@ def calculate_grid(
     :param emax: clip energy values for better visualization, defaults to 5000.0
     :param emin: clip energy values for better visualization, defaults to -5000.0
     :param pallete: color pallete for visualization, defaults to "RdBu"
+    :param atomic_pallete_threshold: atomic pallete threshold, defaults to 0.5
     :param return_dict: return a dictionary of outputs, defaults to False
     :return: energy grid
     """
@@ -148,6 +150,7 @@ def calculate_grid(
             emax,
             emin,
             pallete,
+            atomic_pallete_threshold,
         )
 
     if return_dict:

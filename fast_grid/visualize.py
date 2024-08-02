@@ -13,6 +13,7 @@ def visualize_grid(
     emax: float = 5000,
     emin: float = -5000,
     pallete: str = "RdBu",
+    atomic_pallete_threshold: float = 0.5,
 ):
     pos_atoms = atoms.get_positions()
     cell_vectors = np.array(atoms.cell)
@@ -31,7 +32,7 @@ def visualize_grid(
         cloest_atom = np.argmin(dist_matrix, axis=1)  # (G,)
         cloest_atom_types = atoms.numbers[cloest_atom]  # (G,)
         rgb_atom_colors = jmol_colors[cloest_atom_types] * 255  # (G, 3)
-        calculated_grid[calculated_grid < 0.5] = 0
+        calculated_grid[calculated_grid < atomic_pallete_threshold] = 0
         rgba_atom_colors = np.concatenate(
             [rgb_atom_colors, calculated_grid[:, None]], axis=1
         )  # (G, 4)
